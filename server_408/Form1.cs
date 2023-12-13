@@ -31,11 +31,11 @@ namespace client_408
                 receiveThread = new Thread(new ThreadStart(ReceiveMessages));
                 receiveThread.Start();
 
-                richTextBox6.AppendText($"Connected to server {serverIp}:{serverPort} as {username}\n");
+                richTextBox8.AppendText($"Connected to server {serverIp}:{serverPort} as {username}\n");
             }
             catch (Exception ex)
             {
-                richTextBox6.AppendText($"Error connecting to server: {ex.Message}\n");
+                richTextBox8.AppendText($"Error connecting to server: {ex.Message}\n");
             }
         }
 
@@ -57,7 +57,7 @@ namespace client_408
             }
             catch (Exception ex)
             {
-                richTextBox6.AppendText($"Error receiving message from server: {ex.Message}\n");
+                richTextBox8.AppendText($"Error receiving message from server: {ex.Message}\n");
             }
         }
 
@@ -87,7 +87,7 @@ namespace client_408
             }
             else
             {
-                richTextBox6.AppendText($"Invalid message format from server: {message}\n");
+                richTextBox8.AppendText($"Invalid message format from server: {message}\n");
             }
         }
 
@@ -102,11 +102,12 @@ namespace client_408
             try
             {
                 byte[] buffer = Encoding.ASCII.GetBytes(message);
+                richTextBox8.AppendText($"Error sending message to server");
                 clientStream.Write(buffer, 0, buffer.Length);
             }
             catch (Exception ex)
             {
-                richTextBox6.AppendText($"Error sending message to server: {ex.Message}\n");
+                richTextBox8.AppendText($"Error sending message to server: {ex.Message}\n");
             }
         }
 
