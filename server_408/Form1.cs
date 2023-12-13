@@ -170,8 +170,10 @@ namespace client_408
         {
             // Implement how to subscribe to channels
             // You may need to modify this based on your specific design
-            SendMessage("UNSUBSCRIBE|IF10000);
+            SendMessage("UNSUBSCRIBE|IF10000");
              //HFY
+             //MERT
+             //SMT
 
         }
 
