@@ -11,7 +11,7 @@ namespace client_408
         private TcpClient tcpClient;
         private NetworkStream clientStream;
         private Thread receiveThread;
-
+        
         public Form1()
         {
             InitializeComponent();
@@ -25,7 +25,7 @@ namespace client_408
                 clientStream = tcpClient.GetStream();
 
                 // Send the username to the server
-                SendMessage($"CONNECT|{username}");
+                //SendMessage($"CONNECT|{username}");
 
                 // Start a thread to listen for messages from the server
                 receiveThread = new Thread(new ThreadStart(ReceiveMessages));
@@ -102,7 +102,7 @@ namespace client_408
             try
             {
                 byte[] buffer = Encoding.ASCII.GetBytes(message);
-                richTextBox8.AppendText($"Error sending message to server");
+                //richTextBox8.AppendText($"Error sending message to server");
                 clientStream.Write(buffer, 0, buffer.Length);
             }
             catch (Exception ex)
@@ -170,7 +170,7 @@ namespace client_408
         {
             // Implement how to subscribe to channels
             // You may need to modify this based on your specific design
-            SendMessage("UNSUBSCRIBE|IF100");
+            SendMessage("UNSUBSCRIBE|IF1000");
         }
 
         private void button6_Click(object sender, EventArgs e)
