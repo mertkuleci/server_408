@@ -170,7 +170,8 @@ namespace client_408
         {
             // Implement how to subscribe to channels
             // You may need to modify this based on your specific design
-            SendMessage("UNSUBSCRIBE|IF10000);
+            SendMessage("UNSUBSCRIBE|IF10000");
+            // Mert Kuleci
         }
 
         private void button6_Click(object sender, EventArgs e)
