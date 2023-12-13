@@ -39,6 +39,7 @@ namespace client_408
             }
         }
 
+
         private void ReceiveMessages()
         {
             try
@@ -57,7 +58,10 @@ namespace client_408
             }
             catch (Exception ex)
             {
-                richTextBox8.AppendText($"Error receiving message from server: {ex.Message}\n");
+                Invoke(new Action(() =>
+                {
+                    richTextBox8.AppendText($"Error receiving message from server: {ex.Message}\n");
+                }));
             }
         }
 
@@ -74,7 +78,7 @@ namespace client_408
 
                 switch (action)
                 {
-                    case "MESSAGE":
+                    case "SEND":
                         if (parts.Length >= 4)
                         {
                             string sender = parts[2];
@@ -87,7 +91,10 @@ namespace client_408
             }
             else
             {
-                richTextBox8.AppendText($"Invalid message format from server: {message}\n");
+                Invoke(new Action(() =>
+                {
+                    richTextBox8.AppendText($"Invalid message format from server: {message}\n");
+                }));
             }
         }
 
@@ -99,6 +106,10 @@ namespace client_408
 
         private void SendMessage(string message)
         {
+
+            string username = richTextBox3.Text;
+
+            message = message + "|" + username;
             try
             {
                 byte[] buffer = Encoding.ASCII.GetBytes(message);
@@ -107,7 +118,10 @@ namespace client_408
             }
             catch (Exception ex)
             {
-                richTextBox8.AppendText($"Error sending message to server: {ex.Message}\n");
+                Invoke(new Action(() =>
+                {
+                    richTextBox8.AppendText($"Error sending message to server: {ex.Message}\n");
+                }));
             }
         }
 
@@ -133,7 +147,7 @@ namespace client_408
                 tcpClient.Close();
             }
         }
-
+        
         private void button1_Click(object sender, EventArgs e)
         {
             {
@@ -147,7 +161,10 @@ namespace client_408
                 }
                 else
                 {
-                    richTextBox6.AppendText("Invalid server port number.\n");
+                    Invoke(new Action(() =>
+                    {
+                        richTextBox6.AppendText("Invalid server port number.\n");
+                    }));
                 }
             }
         }
@@ -170,7 +187,7 @@ namespace client_408
         {
             // Implement how to subscribe to channels
             // You may need to modify this based on your specific design
-            SendMessage("UNSUBSCRIBE|IF10000");
+            SendMessage("UNSUBSCRIBE|IF100");
              //HFY
              //MERT
              //SMT
