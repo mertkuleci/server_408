@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -102,12 +103,65 @@ namespace client_408
                 string channel = parts[0];
                 string sent_message = parts[1];
 
+            if (sent_message == "SubscribedtoIF100")
+            {
+                this.button4.BackColor = System.Drawing.Color.LawnGreen;
+                this.button5.BackColor = System.Drawing.SystemColors.ActiveBorder;
+                this.button7.BackColor = System.Drawing.Color.Green;
+
+
+                UpdateRichTextBox("You subscribed to the channel IF100! \n");
+
+            }
+            else if (sent_message == "SubscribedtoSPS101")
+            {
+                this.button2.BackColor = System.Drawing.Color.LawnGreen;
+                this.button6.BackColor = System.Drawing.SystemColors.ActiveBorder;
+                this.button8.BackColor = System.Drawing.Color.Green;
+
+
+                UpdateRichTextBox("You subscribed to the channel SPS101! \n");
+
+            }
+            else if (sent_message == "UnsubscribedfromIF100")
+            {
+
+                this.button4.BackColor = System.Drawing.SystemColors.ActiveBorder;
+                this.button5.BackColor = System.Drawing.Color.Crimson;
+                this.button7.BackColor = System.Drawing.SystemColors.ButtonShadow;
+
+
+                UpdateRichTextBox("You unsubscribed from the channel IF101! \n");
+
+
+            }
+            else if (sent_message == "UnsubscribedfromSPS101")
+            {
+
+                this.button2.BackColor = System.Drawing.SystemColors.ActiveBorder;
+                this.button6.BackColor = System.Drawing.Color.Crimson;
+                this.button8.BackColor = System.Drawing.SystemColors.ButtonShadow;
+
+
+                UpdateRichTextBox("You unsubscribed from the channel SPS101!\n");
+
+
+            }
+            else if (channel == "IF100" || channel == "SPS101")
+            {
                 DisplayMessage(channel, sent_message);
-                        
-                        // Add cases for other server actions if needed
-                
-            
-    
+
+            }
+
+
+
+
+
+
+            // Add cases for other server actions if needed
+
+
+
         }
 
         private void DisplayMessage(string channel, string message)
@@ -193,6 +247,7 @@ namespace client_408
             // Implement how to subscribe to channels
             // You may need to modify this based on your specific design
             SendMessage("SUBSCRIBE|IF100");
+            
         }
 
         private void button2_Click(object sender, EventArgs e)
