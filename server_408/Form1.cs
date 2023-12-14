@@ -96,12 +96,9 @@ namespace client_408
             // Implement your logic to handle different types of server messages
             // For example, you can split the message into parts and switch based on the action
             string[] parts = message.Split('|');
-
             
-
-            
-                string channel = parts[0];
-                string sent_message = parts[1];
+            string channel = parts[0];
+            string sent_message = parts[1];
 
             if (sent_message == "SubscribedtoIF100")
             {
@@ -150,12 +147,13 @@ namespace client_408
             else if (channel == "IF100" || channel == "SPS101")
             {
                 DisplayMessage(channel, sent_message);
-
             }
-
-
-
-
+            else if(channel == "NOTUNIQUE")
+            {
+                // There is an user that already exist with the entered username.
+                // therefore, connection is terminated with a warning message.
+                UpdateRichTextBox(sent_message);
+            }
 
 
             // Add cases for other server actions if needed
