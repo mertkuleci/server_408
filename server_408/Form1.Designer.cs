@@ -129,13 +129,14 @@
             // 
             // button3
             // 
-            this.button3.BackColor = System.Drawing.SystemColors.InactiveCaption;
+            this.button3.BackColor = System.Drawing.SystemColors.ButtonShadow;
             this.button3.Location = new System.Drawing.Point(845, 39);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(144, 104);
             this.button3.TabIndex = 8;
             this.button3.Text = "Disconnect";
             this.button3.UseVisualStyleBackColor = false;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // label4
             // 
@@ -173,6 +174,7 @@
             // 
             // richTextBox6
             // 
+            this.richTextBox6.Font = new System.Drawing.Font("Bahnschrift Condensed", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.richTextBox6.Location = new System.Drawing.Point(58, 296);
             this.richTextBox6.Name = "richTextBox6";
             this.richTextBox6.Size = new System.Drawing.Size(431, 129);
@@ -181,6 +183,8 @@
             // 
             // richTextBox7
             // 
+            this.richTextBox7.BackColor = System.Drawing.SystemColors.Window;
+            this.richTextBox7.Font = new System.Drawing.Font("Bahnschrift Condensed", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.richTextBox7.Location = new System.Drawing.Point(527, 294);
             this.richTextBox7.Name = "richTextBox7";
             this.richTextBox7.Size = new System.Drawing.Size(463, 131);

@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace client_408
 {
@@ -18,6 +19,8 @@ namespace client_408
             InitializeComponent();
         }
 
+
+        //Connecting to the server
         private void ConnectToServer(string serverIp, int serverPort, string username)
         {
             try
@@ -25,14 +28,11 @@ namespace client_408
                 tcpClient = new TcpClient(serverIp, serverPort);
                 clientStream = tcpClient.GetStream();
 
-                // Send the username to the server
                 SendMessage($"CONNECT|{username}");
 
-                // Start a thread to listen for messages from the server
                 receiveThread = new Thread(new ThreadStart(ReceiveMessages));
                 receiveThread.Start();
 
-                richTextBox8.AppendText($"Connected to server {serverIp}:{serverPort} as {username}\n");
             }
             catch (Exception ex)
             {
@@ -40,6 +40,8 @@ namespace client_408
             }
         }
 
+
+        //Updating the action RichTextBox
         private void UpdateRichTextBox(string message)
         {
             if (richTextBox8.InvokeRequired && !richTextBox8.IsDisposed)
@@ -50,23 +52,10 @@ namespace client_408
             {
                 richTextBox8.AppendText(message);
             }
-
-        }
-
-        private void UpdateRichTextBoxIF(string message)
-        {
-            if (richTextBox6.InvokeRequired && !richTextBox6.IsDisposed)
-            {
-                richTextBox6.Invoke(new Action<string>(UpdateRichTextBox), message);
-            }
-            else if (!richTextBox6.IsDisposed)
-            {
-                richTextBox6.AppendText(message);
-            }
-
         }
 
 
+        //Receive the message from server
         private void ReceiveMessages()
         {
             try
@@ -91,80 +80,99 @@ namespace client_408
             }
         }
 
+        //Processing the received message from server
         private void ProcessServerMessage(string message)
         {
-            // Implement your logic to handle different types of server messages
-            // For example, you can split the message into parts and switch based on the action
             string[] parts = message.Split('|');
             
-            string channel = parts[0];
+            string channel = parts[0]; // It is either "IF100" or "SPS101" or "CONNECT" or "DISCONNECT" or "NOTUNIQUE"
             string sent_message = parts[1];
 
+            //Processing each message type for each kind of request that came from the server
+            //Also updating the colors of the UI
+
+            //If the client subcribed to IF100
             if (sent_message == "SubscribedtoIF100")
             {
-                this.button4.BackColor = System.Drawing.Color.LawnGreen;
-                this.button5.BackColor = System.Drawing.SystemColors.ActiveBorder;
+                this.button4.BackColor = System.Drawing.SystemColors.ActiveBorder;
+                this.button5.BackColor = System.Drawing.Color.Crimson;
                 this.button7.BackColor = System.Drawing.Color.Green;
 
-
                 UpdateRichTextBox("You subscribed to the channel IF100! \n");
-
             }
+
+            //If the client subcribed to SPS101
             else if (sent_message == "SubscribedtoSPS101")
             {
-                this.button2.BackColor = System.Drawing.Color.LawnGreen;
-                this.button6.BackColor = System.Drawing.SystemColors.ActiveBorder;
+                this.button2.BackColor = System.Drawing.SystemColors.ActiveBorder;
+                this.button6.BackColor = System.Drawing.Color.Crimson;
                 this.button8.BackColor = System.Drawing.Color.Green;
 
-
                 UpdateRichTextBox("You subscribed to the channel SPS101! \n");
-
             }
+
+            //If the client unsubcribed from IF100
             else if (sent_message == "UnsubscribedfromIF100")
             {
 
-                this.button4.BackColor = System.Drawing.SystemColors.ActiveBorder;
-                this.button5.BackColor = System.Drawing.Color.Crimson;
+                this.button4.BackColor = System.Drawing.Color.LawnGreen;
+                this.button5.BackColor = System.Drawing.SystemColors.ActiveBorder;
                 this.button7.BackColor = System.Drawing.SystemColors.ButtonShadow;
 
-
                 UpdateRichTextBox("You unsubscribed from the channel IF101! \n");
-
-
             }
+
+            //If the client unsubcribed from SPS101
             else if (sent_message == "UnsubscribedfromSPS101")
             {
-
-                this.button2.BackColor = System.Drawing.SystemColors.ActiveBorder;
-                this.button6.BackColor = System.Drawing.Color.Crimson;
+                this.button2.BackColor = System.Drawing.Color.LawnGreen;
+                this.button6.BackColor = System.Drawing.SystemColors.ActiveBorder;
                 this.button8.BackColor = System.Drawing.SystemColors.ButtonShadow;
 
-
                 UpdateRichTextBox("You unsubscribed from the channel SPS101!\n");
-
-
             }
+
+            //If messages received from the channels
             else if (channel == "IF100" || channel == "SPS101")
             {
                 DisplayMessage(channel, sent_message);
             }
-            else if(channel == "NOTUNIQUE")
+
+            //If there is an user that already exist with the entered username.
+            // therefore, connection is terminated with a warning message.
+            else if (channel == "NOTUNIQUE")
             {
-                // There is an user that already exist with the entered username.
-                // therefore, connection is terminated with a warning message.
                 UpdateRichTextBox(sent_message);
             }
 
+            //If the connect button is clicked
+            else if (channel == "CONNECTED")
+            {
+                this.button1.BackColor = System.Drawing.SystemColors.ButtonShadow;
+                this.button3.BackColor = System.Drawing.Color.IndianRed;
 
-            // Add cases for other server actions if needed
+                UpdateRichTextBox("You are connected to the server!\n");
+            }
 
+            //If the disconnect button is clicked
+            else if (channel == "DISCONNECT")
+            {
+                this.button1.BackColor = System.Drawing.Color.MediumSeaGreen;
+                this.button3.BackColor = System.Drawing.SystemColors.ButtonShadow;
+                this.button2.BackColor = System.Drawing.SystemColors.ActiveBorder;
+                this.button6.BackColor = System.Drawing.Color.Crimson;
+                this.button8.BackColor = System.Drawing.SystemColors.ButtonShadow;
+                this.button4.BackColor = System.Drawing.SystemColors.ActiveBorder;
+                this.button5.BackColor = System.Drawing.Color.Crimson;
+                this.button7.BackColor = System.Drawing.SystemColors.ButtonShadow;
 
-
+                UpdateRichTextBox("You are disconnected!\n");
+            }
         }
 
+        //Displaying message of IF100 or SPS101 channels
         private void DisplayMessage(string channel, string message)
         {
-            // Implement how you want to display the message in the client GUI
             switch (channel)
             {
                 case "IF100":
@@ -176,8 +184,15 @@ namespace client_408
             }
         }
 
+
+
+        //To update IF100 and SPS101 channels message boxes
         private void AppendTextToRichTextBox(RichTextBox richTextBox, string text)
         {
+            DateTime currentTime = DateTime.Now; //To write the current time for each message sent
+            string time = currentTime.ToString("hh:mm:ss tt");
+            text = time + ": " + text;
+
             if (richTextBox.InvokeRequired)
             {
                 richTextBox.Invoke(new Action(() => richTextBox.AppendText(text)));
@@ -189,36 +204,39 @@ namespace client_408
         }
 
 
+
+        //Sending message to the server
         private void SendMessage(string message)
         {
 
             string username = richTextBox3.Text;
+            message = message + "|" + username; //To send the username to the server
 
-            message = message + "|" + username;
             try
             {
                 byte[] buffer = Encoding.ASCII.GetBytes(message);
-                //richTextBox8.AppendText($"Error sending message to server");
                 clientStream.Write(buffer, 0, buffer.Length);
             }
             catch (Exception ex)
             {
-             
                     UpdateRichTextBox($"Error sending message to server: {ex.Message}\n");
-              
             }
         }
 
-
+        // To clean up resources when the form is closing
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // Clean up resources when the form is closing
             if (tcpClient != null)
             {
                 tcpClient.Close();
             }
         }
+
+
+
+        //Here are the buttons of the client:
         
+        //Button to connect to the server
         private void button1_Click(object sender, EventArgs e)
         {
             {
@@ -240,62 +258,49 @@ namespace client_408
             }
         }
 
+        //Button for subscribing to the IF100 channel
         private void button4_Click(object sender, EventArgs e)
         {
-            // Implement how to subscribe to channels
-            // You may need to modify this based on your specific design
             SendMessage("SUBSCRIBE|IF100");
-            
         }
 
+        //Button for subscribing to the SPS101 channel
         private void button2_Click(object sender, EventArgs e)
         {
-            // Implement how to subscribe to channels
-            // You may need to modify this based on your specific design
             SendMessage("SUBSCRIBE|SPS101");
         }
 
+        //Button for unsubscribing from the IF100 channel
         private void button5_Click(object sender, EventArgs e)
         {
-            // Implement how to subscribe to channels
-            // You may need to modify this based on your specific design
             SendMessage("UNSUBSCRIBE|IF100");
-             //HFY
-             //MERT
-             //SMT
-             //OPE
-
         }
 
+        //Button for unsubscribing from the SPS101 channel
         private void button6_Click(object sender, EventArgs e)
         {
-            // Implement how to subscribe to channels
-            // You may need to modify this based on your specific design
             SendMessage("UNSUBSCRIBE|SPS101");
-            
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            // Implement how to subscribe to channels
-            // You may need to modify this based on your specific design
-            SendMessage("DISCONNECT");
         }
 
 
-
+        //Button that sends message to the IF100 channel
         private void button7_Click(object sender, EventArgs e)
         {
             string message = richTextBox4.Text;
-            //UpdateRichTextBox("if100_message");
             SendMessage($"SEND|IF100|{message}");
         }
 
+        //Button that sends message to the SPS101 channel
         private void button8_Click(object sender, EventArgs e)
         {
             string message = richTextBox5.Text;
-            //UpdateRichTextBox("sps101_message");
             SendMessage($"SEND|SPS101|{message}");
+        }
+
+        //Button for the disconnection
+        private void button3_Click(object sender, EventArgs e)
+        {
+            SendMessage("DISCONNECT");
         }
     }
 }
