@@ -39,6 +39,32 @@ namespace client_408
             }
         }
 
+        private void UpdateRichTextBox(string message)
+        {
+            if (richTextBox8.InvokeRequired && !richTextBox8.IsDisposed)
+            {
+                richTextBox8.Invoke(new Action<string>(UpdateRichTextBox), message);
+            }
+            else if (!richTextBox8.IsDisposed)
+            {
+                richTextBox8.AppendText(message);
+            }
+
+        }
+
+        private void UpdateRichTextBoxIF(string message)
+        {
+            if (richTextBox6.InvokeRequired && !richTextBox6.IsDisposed)
+            {
+                richTextBox6.Invoke(new Action<string>(UpdateRichTextBox), message);
+            }
+            else if (!richTextBox6.IsDisposed)
+            {
+                richTextBox6.AppendText(message);
+            }
+
+        }
+
 
         private void ReceiveMessages()
         {
@@ -58,10 +84,9 @@ namespace client_408
             }
             catch (Exception ex)
             {
-                Invoke(new Action(() =>
-                {
-                    richTextBox8.AppendText($"Error receiving message from server: {ex.Message}\n");
-                }));
+              
+                    UpdateRichTextBox($"Error receiving message from server: {ex.Message}\n");
+         
             }
         }
 
@@ -71,38 +96,46 @@ namespace client_408
             // For example, you can split the message into parts and switch based on the action
             string[] parts = message.Split('|');
 
-            if (parts.Length >= 2)
-            {
-                string action = parts[0].ToUpper();
-                string channel = parts[1].ToUpper();
+            
 
-                switch (action)
-                {
-                    case "SEND":
-                        if (parts.Length >= 4)
-                        {
-                            string sender = parts[2];
-                            string data = parts[3];
-                            DisplayMessage(channel, sender, data);
-                        }
-                        break;
+            
+                string channel = parts[0];
+                string sent_message = parts[1];
+
+                DisplayMessage(channel, sent_message);
+                        
                         // Add cases for other server actions if needed
-                }
+                
+            
+    
+        }
+
+        private void DisplayMessage(string channel, string message)
+        {
+            // Implement how you want to display the message in the client GUI
+            switch (channel)
+            {
+                case "IF100":
+                    AppendTextToRichTextBox(richTextBox6, message);
+                    break;
+                case "SPS101":
+                    AppendTextToRichTextBox(richTextBox7, message);
+                    break;
+            }
+        }
+
+        private void AppendTextToRichTextBox(RichTextBox richTextBox, string text)
+        {
+            if (richTextBox.InvokeRequired)
+            {
+                richTextBox.Invoke(new Action(() => richTextBox.AppendText(text)));
             }
             else
             {
-                Invoke(new Action(() =>
-                {
-                    richTextBox8.AppendText($"Invalid message format from server: {message}\n");
-                }));
+                richTextBox.AppendText(text);
             }
         }
 
-        private void DisplayMessage(string channel, string sender, string data)
-        {
-            // Implement how you want to display the message in the client GUI
-            richTextBox1.AppendText($"[{channel}] {sender}: {data}\n");
-        }
 
         private void SendMessage(string message)
         {
@@ -118,26 +151,12 @@ namespace client_408
             }
             catch (Exception ex)
             {
-                Invoke(new Action(() =>
-                {
-                    richTextBox8.AppendText($"Error sending message to server: {ex.Message}\n");
-                }));
+             
+                    UpdateRichTextBox($"Error sending message to server: {ex.Message}\n");
+              
             }
         }
 
-
-        private void button7_Click(object sender, EventArgs e)
-        {
-            string message = richTextBox4.Text;
-            SendMessage($"SEND|IF100|{message}");
-        }
-
-        private void button8_Click(object sender, EventArgs e)
-        {
-            string message = richTextBox5.Text;
-            SendMessage($"SEND|SPS101|{message}");
-        }
-   
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -210,6 +229,21 @@ namespace client_408
             SendMessage("DISCONNECT");
         }
 
+
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            string message = richTextBox4.Text;
+            //UpdateRichTextBox("if100_message");
+            SendMessage($"SEND|IF100|{message}");
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            string message = richTextBox5.Text;
+            //UpdateRichTextBox("sps101_message");
+            SendMessage($"SEND|SPS101|{message}");
+        }
     }
 }
 
