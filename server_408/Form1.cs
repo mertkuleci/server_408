@@ -25,7 +25,7 @@ namespace client_408
                 clientStream = tcpClient.GetStream();
 
                 // Send the username to the server
-                //SendMessage($"CONNECT|{username}");
+                SendMessage($"CONNECT|{username}");
 
                 // Start a thread to listen for messages from the server
                 receiveThread = new Thread(new ThreadStart(ReceiveMessages));
