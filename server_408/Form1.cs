@@ -8,6 +8,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace client_408
 {
+
     public partial class Form1 : Form
     {
         private TcpClient tcpClient;
@@ -18,6 +19,8 @@ namespace client_408
         {
             InitializeComponent();
         }
+
+        bool isConnected = false;
 
 
         //Connecting to the server
@@ -33,9 +36,9 @@ namespace client_408
                 receiveThread = new Thread(new ThreadStart(ReceiveMessages));
                 receiveThread.Start();
             }
-            catch (Exception ex)
+            catch 
             {
-                richTextBox8.AppendText($"Error connecting to server: {ex.Message}\n");
+                UpdateRichTextBox("Error connecting to server.\n");
             }
         }
 
@@ -138,6 +141,12 @@ namespace client_408
                 DisplayMessage(channel, sent_message);
             }
 
+            //If client tries to send message or subscribe if it is not connected or subcribed
+            else if(channel == "IF100unsub" || channel == "SPS101unsub" || channel == "IF100uncon" || channel == "SPS101uncon"){
+                UpdateRichTextBox(sent_message);
+                UpdateRichTextBox("\n");
+            }
+
             //If there is an user that already exist with the entered username.
             // therefore, connection is terminated with a warning message.
             else if (channel == "NOTUNIQUE")
@@ -153,6 +162,7 @@ namespace client_408
                 button1.Invoke(new Action(() => button1.Enabled = false));
                 button3.Invoke(new Action(() => button3.Enabled = true));
                 UpdateRichTextBox("You are connected to the server!\n");
+                isConnected = true;
             }
 
             //If the disconnect button is clicked
@@ -169,6 +179,7 @@ namespace client_408
                 this.button5.BackColor = System.Drawing.Color.Crimson;
                 this.button7.BackColor = System.Drawing.SystemColors.ButtonShadow;
                 UpdateRichTextBox("You are disconnected!\n");
+                isConnected = false;
             }
         }
 
@@ -212,17 +223,28 @@ namespace client_408
         {
 
             string username = richTextBox3.Text;
-            message = message + "|" + username; //To send the username to the server
+            string updatedusername = username.Replace("|", "?");
 
-            try
+            message = message + "|" + updatedusername; //To send the username to the server
+
+            if (isConnected || message.IndexOf("|") == 7)
             {
-                byte[] buffer = Encoding.ASCII.GetBytes(message);
-                clientStream.Write(buffer, 0, buffer.Length);
-            }
-            catch (Exception ex)
-            {
+                try
+                {
+                    byte[] buffer = Encoding.ASCII.GetBytes(message);
+                    clientStream.Write(buffer, 0, buffer.Length);
+                }
+                catch (Exception ex)
+                {
                     UpdateRichTextBox($"Error sending message to server: {ex.Message}\n");
+                }
             }
+            else
+            {
+                UpdateRichTextBox("You are not connected!\n");
+            }
+
+           
         }
 
         // To clean up resources when the form is closing
@@ -230,7 +252,11 @@ namespace client_408
         {
             if (tcpClient != null)
             {
+                SendMessage("DISCONNECT|dummy|dummy");
+
                 tcpClient.Close();
+                isConnected = false;
+
             }
         }
 
@@ -248,14 +274,15 @@ namespace client_408
                 if (int.TryParse(richTextBox2.Text, out serverPort))
                 {
                     string username = richTextBox3.Text;
-                    ConnectToServer(serverIp, serverPort, username);
+                    string updatedusername = username.Replace("|", "?"); // To avoid usernames that contains '|'
+
+                    ConnectToServer(serverIp, serverPort, updatedusername);
                 }
                 else
                 {
-                    Invoke(new Action(() =>
-                    {
-                        richTextBox6.AppendText("Invalid server port number.\n");
-                    }));
+                 
+                     UpdateRichTextBox("Invalid server port number.\n");
+                  
                 }
             }
         }
@@ -289,13 +316,16 @@ namespace client_408
         private void button7_Click(object sender, EventArgs e)
         {
             string message = richTextBox4.Text;
+            richTextBox4.Clear();
             SendMessage($"SEND|IF100|{message}");
+
         }
 
         //Button that sends message to the SPS101 channel
         private void button8_Click(object sender, EventArgs e)
         {
             string message = richTextBox5.Text;
+            richTextBox5.Clear();
             SendMessage($"SEND|SPS101|{message}");
         }
 
@@ -305,6 +335,7 @@ namespace client_408
             SendMessage("DISCONNECT|dummy|dummy");
 
         }
+
     }
 }
 
