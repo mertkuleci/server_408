@@ -118,7 +118,7 @@
             // 
             // button2
             // 
-            this.button2.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.button2.BackColor = System.Drawing.Color.LawnGreen;
             this.button2.Location = new System.Drawing.Point(723, 39);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(116, 49);
@@ -228,7 +228,7 @@
             // 
             // button4
             // 
-            this.button4.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.button4.BackColor = System.Drawing.Color.LawnGreen;
             this.button4.Location = new System.Drawing.Point(597, 39);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(107, 49);
@@ -239,7 +239,7 @@
             // 
             // button5
             // 
-            this.button5.BackColor = System.Drawing.Color.Crimson;
+            this.button5.BackColor = System.Drawing.SystemColors.ButtonShadow;
             this.button5.Location = new System.Drawing.Point(597, 94);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(107, 49);
@@ -250,7 +250,7 @@
             // 
             // button6
             // 
-            this.button6.BackColor = System.Drawing.Color.Crimson;
+            this.button6.BackColor = System.Drawing.SystemColors.ButtonShadow;
             this.button6.Location = new System.Drawing.Point(723, 94);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(116, 49);

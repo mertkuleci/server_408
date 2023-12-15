@@ -28,7 +28,7 @@ namespace client_408
                 tcpClient = new TcpClient(serverIp, serverPort);
                 clientStream = tcpClient.GetStream();
 
-                SendMessage($"CONNECT|{username}");
+                SendMessage($"CONNECT|dummy|{username}");
 
                 receiveThread = new Thread(new ThreadStart(ReceiveMessages));
                 receiveThread.Start();
@@ -84,9 +84,10 @@ namespace client_408
         private void ProcessServerMessage(string message)
         {
             string[] parts = message.Split('|');
-            
+            int firstIndex = message.IndexOf('|');
+
             string channel = parts[0]; // It is either "IF100" or "SPS101" or "CONNECT" or "DISCONNECT" or "NOTUNIQUE"
-            string sent_message = parts[1];
+            string sent_message = message.Substring(firstIndex + 1);
 
             //Processing each message type for each kind of request that came from the server
             //Also updating the colors of the UI
@@ -261,25 +262,25 @@ namespace client_408
         //Button for subscribing to the IF100 channel
         private void button4_Click(object sender, EventArgs e)
         {
-            SendMessage("SUBSCRIBE|IF100");
+            SendMessage("SUBSCRIBE|IF100|dummy");
         }
 
         //Button for subscribing to the SPS101 channel
         private void button2_Click(object sender, EventArgs e)
         {
-            SendMessage("SUBSCRIBE|SPS101");
+            SendMessage("SUBSCRIBE|SPS101|dummy");
         }
 
         //Button for unsubscribing from the IF100 channel
         private void button5_Click(object sender, EventArgs e)
         {
-            SendMessage("UNSUBSCRIBE|IF100");
+            SendMessage("UNSUBSCRIBE|IF100|dummy");
         }
 
         //Button for unsubscribing from the SPS101 channel
         private void button6_Click(object sender, EventArgs e)
         {
-            SendMessage("UNSUBSCRIBE|SPS101");
+            SendMessage("UNSUBSCRIBE|SPS101|dummy");
         }
 
 
@@ -300,7 +301,7 @@ namespace client_408
         //Button for the disconnection
         private void button3_Click(object sender, EventArgs e)
         {
-            SendMessage("DISCONNECT");
+            SendMessage("DISCONNECT|dummy|dummy");
         }
     }
 }
