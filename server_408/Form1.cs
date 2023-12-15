@@ -150,7 +150,6 @@ namespace client_408
             {
                 this.button1.BackColor = System.Drawing.SystemColors.ButtonShadow;
                 this.button3.BackColor = System.Drawing.Color.IndianRed;
-
                 button1.Invoke(new Action(() => button1.Enabled = false));
                 button3.Invoke(new Action(() => button3.Enabled = true));
                 UpdateRichTextBox("You are connected to the server!\n");
@@ -160,8 +159,8 @@ namespace client_408
             else if (channel == "DISCONNECT")
             {
                 this.button1.BackColor = System.Drawing.Color.MediumSeaGreen;
-                button1.Invoke(new Action(() => button1.Enabled = true));
                 this.button3.BackColor = System.Drawing.SystemColors.ButtonShadow;
+                button1.Invoke(new Action(() => button1.Enabled = true));
                 button3.Invoke(new Action(() => button3.Enabled = false));
                 this.button2.BackColor = System.Drawing.SystemColors.ActiveBorder;
                 this.button6.BackColor = System.Drawing.Color.Crimson;
