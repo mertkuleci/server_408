@@ -32,7 +32,6 @@ namespace client_408
 
                 receiveThread = new Thread(new ThreadStart(ReceiveMessages));
                 receiveThread.Start();
-
             }
             catch (Exception ex)
             {
@@ -152,6 +151,8 @@ namespace client_408
                 this.button1.BackColor = System.Drawing.SystemColors.ButtonShadow;
                 this.button3.BackColor = System.Drawing.Color.IndianRed;
 
+                button1.Invoke(new Action(() => button1.Enabled = false));
+                button3.Invoke(new Action(() => button3.Enabled = true));
                 UpdateRichTextBox("You are connected to the server!\n");
             }
 
@@ -159,14 +160,15 @@ namespace client_408
             else if (channel == "DISCONNECT")
             {
                 this.button1.BackColor = System.Drawing.Color.MediumSeaGreen;
+                button1.Invoke(new Action(() => button1.Enabled = true));
                 this.button3.BackColor = System.Drawing.SystemColors.ButtonShadow;
+                button3.Invoke(new Action(() => button3.Enabled = false));
                 this.button2.BackColor = System.Drawing.SystemColors.ActiveBorder;
                 this.button6.BackColor = System.Drawing.Color.Crimson;
                 this.button8.BackColor = System.Drawing.SystemColors.ButtonShadow;
                 this.button4.BackColor = System.Drawing.SystemColors.ActiveBorder;
                 this.button5.BackColor = System.Drawing.Color.Crimson;
                 this.button7.BackColor = System.Drawing.SystemColors.ButtonShadow;
-
                 UpdateRichTextBox("You are disconnected!\n");
             }
         }
@@ -302,6 +304,7 @@ namespace client_408
         private void button3_Click(object sender, EventArgs e)
         {
             SendMessage("DISCONNECT|dummy|dummy");
+
         }
     }
 }
