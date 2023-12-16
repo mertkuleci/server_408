@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "server_408", "server_408\server_408.csproj", "{B646FFC0-5496-4233-ABDD-816EC8A75A46}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client_Application_CS408", "server_408\Client_Application_CS408.csproj", "{B646FFC0-5496-4233-ABDD-816EC8A75A46}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
