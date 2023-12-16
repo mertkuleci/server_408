@@ -253,17 +253,18 @@ namespace client_408
             if (tcpClient != null)
             {
                 SendMessage("DISCONNECT|dummy|dummy");
-
                 tcpClient.Close();
                 isConnected = false;
-
             }
+
+            // Forcefully terminate the application
+            Environment.Exit(0);
         }
 
 
 
         //Here are the buttons of the client:
-        
+
         //Button to connect to the server
         private void button1_Click(object sender, EventArgs e)
         {
