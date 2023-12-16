@@ -14,13 +14,14 @@ namespace client_408
         private TcpClient tcpClient;
         private NetworkStream clientStream;
         private Thread receiveThread;
-        
+        bool isConnected = false;
+        bool threadTerminating = false;
         public Form1()
         {
             InitializeComponent();
+            this.FormClosing += Form1_FormClosing;
         }
 
-        bool isConnected = false;
 
 
         //Connecting to the server
@@ -32,6 +33,7 @@ namespace client_408
                 clientStream = tcpClient.GetStream();
 
                 SendMessage($"CONNECT|dummy|{username}");
+                isConnected = true;
 
                 receiveThread = new Thread(new ThreadStart(ReceiveMessages));
                 receiveThread.Start();
@@ -62,7 +64,7 @@ namespace client_408
         {
             try
             {
-                while (true)
+                while (isConnected)
                 {
                     byte[] message = new byte[4096];
                     int bytesRead = clientStream.Read(message, 0, 4096);
@@ -76,9 +78,10 @@ namespace client_408
             }
             catch (Exception ex)
             {
-              
+                if (!threadTerminating)
+                {
                     UpdateRichTextBox($"Error receiving message from server: {ex.Message}\n");
-         
+                }
             }
         }
 
@@ -191,7 +194,7 @@ namespace client_408
                 case "IF100":
                     AppendTextToRichTextBox(richTextBox6, message);
                     break;
-                case "SPS101":
+                case "SPS101":  
                     AppendTextToRichTextBox(richTextBox7, message);
                     break;
             }
@@ -253,12 +256,11 @@ namespace client_408
             if (tcpClient != null)
             {
                 SendMessage("DISCONNECT|dummy|dummy");
-                tcpClient.Close();
+                threadTerminating = true;
                 isConnected = false;
+                tcpClient.Close();
             }
 
-            // Forcefully terminate the application
-            Environment.Exit(0);
         }
 
 

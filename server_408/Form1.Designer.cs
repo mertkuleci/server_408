@@ -202,7 +202,7 @@
             // 
             // richTextBox7
             // 
-            this.richTextBox7.BackColor = System.Drawing.SystemColors.Window;
+            this.richTextBox7.BackColor = System.Drawing.SystemColors.Control;
             this.richTextBox7.Font = new System.Drawing.Font("Bahnschrift Condensed", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.richTextBox7.Location = new System.Drawing.Point(593, 368);
             this.richTextBox7.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
